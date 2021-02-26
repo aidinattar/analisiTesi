@@ -101,7 +101,7 @@ void Overlap_Distribution_Fit(){
         saveString = "report/OverlapDistributionsDetector" + std::to_string(j+1) + ".pdf";
         saveName   = saveString.c_str();
         Canvas[j]->Draw();
-        Canvas[j]->Print((saveName));
+//        Canvas[j]->Print((saveName));
     }
 
 
@@ -133,7 +133,7 @@ void Overlap_Distribution_Fit(){
         saveString = "report/Overlaps_GrapgDetector" + std::to_string(j+1) + ".pdf";
         saveName   = saveString.c_str();
         Canvas_Tot[j]->Draw();
-        Canvas_Tot[j]->Print((saveName));
+//        Canvas_Tot[j]->Print((saveName));
     }
 
     double    **SNR_ = new double*[num_det];

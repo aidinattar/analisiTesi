@@ -5,8 +5,8 @@
 
 TString path = "/home/aidin/Documenti/Tesi/analisi/frequenze/";
 TString head = "mdc_O4I_GN_LHV_SIM_PMNS_";
-std::string EOS  = "SHT2_0spin1";
-//std::string EOS  = "APR4_q09";
+//std::string EOS  = "SHT2_0spin1";
+std::string EOS  = "APR4_q09";
 TString tail = ".M1.root";
 
 void hrss_snr(){
@@ -23,7 +23,7 @@ void hrss_snr(){
     int entr = merge_tree->GetEntries();
 
     const int numDistances = 5;
-    const int nBinD = 100;
+    const int nBinD = 75;
     const char* hName;
     std::string histname;
     std::string d[numDistances] = { "20000", "10000", "5000", "2500", "1250" };
@@ -113,9 +113,9 @@ void hrss_snr(){
         Vsnr[j+9 ]->SetLineColor(kBlack);
         Vsnr[j+12]->SetLineColor(kViolet);
 
-        Vsnr[j]->            SetTitle( "Injected" );
-        Vsnr[j]->GetXaxis()->SetTitle(   "snr"   );
-        Vsnr[j]->GetYaxis()->SetTitle(  "counts"  );
+        Vsnr[j]->            SetTitle( "simulation snr" );
+        Vsnr[j]->GetXaxis()->SetTitle(      "snr"       );
+        Vsnr[j]->GetYaxis()->SetTitle(     "counts"     );
 
         Vsnr[j]->GetXaxis()->CenterTitle();
         Vsnr[j]->GetYaxis()->CenterTitle();
@@ -146,7 +146,7 @@ void hrss_snr(){
         Vhrss[j+9 ]->SetLineColor(kBlack);
         Vhrss[j+12]->SetLineColor(kViolet);
 
-        Vhrss[j]->            SetTitle( "Injected" );
+        Vhrss[j]->            SetTitle( "simulation hrss" );
         Vhrss[j]->GetXaxis()->SetTitle(   "hrss"   );
         Vhrss[j]->GetYaxis()->SetTitle(  "counts"  );
 

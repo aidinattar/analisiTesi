@@ -3,8 +3,8 @@
 
 TString path = "/home/aidin/Documenti/Tesi/analisi/frequenze/";
 TString head = "wave_O4I_GN_LHV_SIM_PMNS_";
-std::string EOS  = "SHT2_0spin1";
-//std::string EOS  = "APR4_q09";
+//std::string EOS  = "SHT2_0spin1";
+std::string EOS  = "APR4_q09";
 TString tail = "_cl.M1.root";
 const int num_det = 3;
 
@@ -61,26 +61,32 @@ void Overlap_Zoom(){
 
     int n;
     int entr = merge_tree->GetEntries();
-    for( int i = 0; i < entr; ++i ){
-        merge_tree->GetEntry( i );
-        for( int k = 0; k < num_det; ++k )
-            if( abs( time[k] - time[k+3] ) < 5 ){
-                Voverlap[k]->Fill(             sqrt(     iSNR[k]     ),
-                                ioSNR[k] /  sqrt( iSNR[k]*oSNR[k] ));
-                for( int j = 1; j < 6; ++j ){
-                    n = 3*( j - 1 ) + k;
-                    if( factor == j )
-                        VioSNR[n]->Fill(            sqrt(     iSNR[k]      ),
-                                         ioSNR[k] / sqrt( iSNR[k]*oSNR[k] ));
-                }
-            }
-    }
-
     string namesave = "eventi" + EOS + ".csv";
     const char* save = namesave.c_str();
     std::ofstream write( save );
     write << "k,contatore,eventID[0],eventID[1],run,factor" << std::endl;
     int cont = 0;
+    for( int i = 0; i < entr; ++i ){
+        merge_tree->GetEntry( i );
+        for( int k = 0; k < num_det; ++k )
+            if( abs( time[k] - time[k+3] ) < 5 )
+                if( sqrt(iSNR[k]) > 20 && sqrt(iSNR[k]) < 90 &&
+                    ioSNR[k] / sqrt( iSNR[k]*oSNR[k] ) < 0.12 ){
+                    write << k          << "," << cont       << ","
+                        << eventID[0] << "," << eventID[1] << "," 
+                        << run        << "," << factor     << std::endl;
+                    Voverlap[k]->Fill(             sqrt(     iSNR[k]     ),
+                                    ioSNR[k] /  sqrt( iSNR[k]*oSNR[k] ));
+                    for( int j = 1; j < 6; ++j ){
+                        n = 3*( j - 1 ) + k;
+                        if( factor == j )
+                            VioSNR[n]->Fill(            sqrt(     iSNR[k]      ),
+                                            ioSNR[k] / sqrt( iSNR[k]*oSNR[k] ));
+                    }
+            }
+            ++cont;
+    }
+
     for( int i = 0; i < entr; ++i ){
         merge_tree->GetEntry( i );
         for( int k = 0; k < num_det; ++k )
@@ -106,7 +112,7 @@ void Overlap_Zoom(){
 
     	namestr = "Detector" + std::to_string(j+1);
     	namecanvas = namestr.c_str();
-    	Canvas[j] = new TCanvas( namecanvas, namecanvas, 800, 800 );
+    	Canvas[j] = new TCanvas( namecanvas, namecanvas, 800, 700 );
     }
 
     gStyle -> SetOptStat(111111);

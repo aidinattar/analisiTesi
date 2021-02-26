@@ -17,9 +17,9 @@ void Overlap_Distribution(){
     TFile*  filemerge = new TFile( merge_file_name.Data(), "update" );
     TTree* merge_tree =   ( TTree* )    filemerge->Get( "waveburst" );
 
-    const int nBinDx = 10;
-    const int nBinDy = 50;
-    const int larg   = 20;
+    const int nBinDx = 15;
+    const int nBinDy = 35;
+    const int larg   = 10;
     float factor;
     float  iSNR[num_det],
            oSNR[num_det],
@@ -55,7 +55,7 @@ void Overlap_Distribution(){
             histname = "Det" + to_string(j+1) + "SNR" +  to_string( (int)SNR[j][i] );
             hName = histname.c_str();
             V[j].push_back(new TH1F( hName, hName, nBinDy,
-                                     0.5+0.5*(1-exp(-0.3*(i-0.2))), 1 ));
+                                     0.5+0.5*(1-exp(-0.2*(i-0.2))), 1 ));
         }
 
     int entr = merge_tree->GetEntries();
@@ -92,7 +92,7 @@ void Overlap_Distribution(){
     const char* saveName;
     string saveString;
     for( int j = 0; j < num_det; ++j ){
-        Canvas[j]->Divide( 5, 2 );
+        Canvas[j]->Divide( 5, 3 );
         for( int i = 0; i < nBinDx; ++i ){
             Canvas[j]->cd(i+1);
             V[j][i]->Draw("");
@@ -134,5 +134,4 @@ void Overlap_Distribution(){
         Canvas_Tot[j]->Draw();
         Canvas_Tot[j]->Print((saveName));
     }
-
 }

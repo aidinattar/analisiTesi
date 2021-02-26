@@ -8,7 +8,7 @@ std::string EOS  = "APR4_q09";
 TString tail = "_cl.M1.root";
 const int num_det = 3;
 
-void Injected_Outputted_SNR(){
+void Injected_Outputted_SNR_ZOOM(){
     TString namefile = head + EOS.c_str() + tail;
 
     TString merge_file_name = path + namefile;
@@ -20,14 +20,14 @@ void Injected_Outputted_SNR(){
     int numDistances = 5;
     int nBinD = 100;
     float factor;
-    float oSNR[num_det], iSNR[num_det];
+    float oSNR[num_det], iSNR[num_det], ioSNR[num_det];
     const char* hName;
     std::string histname;
     double time[6];
     std::string d[5] = { "20", "10", "5", "2.5", "1.25" };
     int n;
     int entr = merge_tree->GetEntries();
-    int maxSNR = 400;
+    int maxSNR = 100;
 
     float **NEToSNR = new float*[numDistances];
     float **NETiSNR = new float*[numDistances];
@@ -46,6 +46,7 @@ void Injected_Outputted_SNR(){
     merge_tree->SetBranchAddress( "factor", &factor );
     merge_tree->SetBranchAddress(   "oSNR", &oSNR   );
     merge_tree->SetBranchAddress(   "iSNR", &iSNR   );
+    merge_tree->SetBranchAddress(  "ioSNR", &ioSNR  );
 
     std::vector <TH1F*> VoSNR;
     VoSNR.reserve( numDistances * num_det );
@@ -79,16 +80,19 @@ void Injected_Outputted_SNR(){
             for( int j = 1; j < numDistances+1; ++j )
                 if( factor == j ){
                     for( int k = 0; k < num_det; ++k )
-                        if( abs( time[k] - time[k+3] ) < 5 ){ // condizione di minimo tempo
-                            n = 3*( j - 1 ) + k;
-//                            std::cout << n << std::endl;
-                            VoSNR[n]->Fill( sqrt(oSNR[k]) );
-                            ViSNR[n]->Fill( sqrt(iSNR[k]) );
-                            NEToSNR[j-1][i] += oSNR[k];
-                            NETiSNR[j-1][i] += iSNR[k];
-                        }
-                    VNETiSNR[j-1]->Fill( sqrt(NETiSNR[j-1][i]) );
-                    VNEToSNR[j-1]->Fill( sqrt(NEToSNR[j-1][i]) );
+                        if( sqrt(iSNR[k]) > 20 && sqrt(iSNR[k]) < 90 &&
+                                ioSNR[k] / sqrt( iSNR[k]*oSNR[k] ) < 0.12 ){
+                            if( abs( time[k] - time[k+3] ) < 5 ){ // condizione di minimo tempo
+                                n = 3*( j - 1 ) + k;
+    //                            std::cout << n << std::endl;
+                                VoSNR[n]->Fill( sqrt(oSNR[k]) );
+                                ViSNR[n]->Fill( sqrt(iSNR[k]) );
+                                NEToSNR[j-1][i] += oSNR[k];
+                                NETiSNR[j-1][i] += iSNR[k];
+                            }
+                            VNETiSNR[j-1]->Fill( sqrt(NETiSNR[j-1][i]) );
+                            VNEToSNR[j-1]->Fill( sqrt(NEToSNR[j-1][i]) );
+                    }
                 }
         }
     std::cout << "ok" << std::endl;
@@ -203,7 +207,7 @@ void Injected_Outputted_SNR(){
     const char* saveName;
     string saveString;
     for( int j = 0; j < num_det; ++j ){
-        saveString = "report/SNRDistributionFactorsDetector" + std::to_string(j+1) + EOS + ".pdf";
+        saveString = "report/SNRDistributionFactors_ZOOM_Detector" + std::to_string(j+1) + EOS + ".pdf";
         saveName   = saveString.c_str();
         Canvas[j]->Draw();
         Canvas[j]->Print((saveName));
@@ -272,7 +276,7 @@ void Injected_Outputted_SNR(){
     VNEToSNR[0]->GetYaxis()->CenterTitle();
 
     NETCanvas->Draw();
-    saveString = "report/Network_SNR_Factors" + EOS + ".pdf";
+    saveString = "report/Network_SNR_Factors_ZOOM" + EOS + ".pdf";
     saveName   = saveString.c_str();
     NETCanvas->Print(saveName);
 }
