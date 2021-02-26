@@ -3,8 +3,8 @@
 
 TString path = "/home/aidin/Documenti/Tesi/analisi/frequenze/";
 TString head = "wave_O4I_GN_LHV_SIM_PMNS_";
-//std::string EOS  = "SHT2_0spin1";
-std::string EOS  = "APR4_q09";
+std::string EOS  = "SHT2_0spin1";
+//std::string EOS  = "APR4_q09";
 TString tail = "_cl.M1.root";
 const int num_det = 3;
 
@@ -73,6 +73,7 @@ void Overlap_Distribution_Fit(){
         for( int i = 0; i < nBinDx; ++i ){
             mea[j][i]    = V[j][i]->GetMean();
             rms[j][i]    = V[j][i]->GetStdDev();
+            err[j][i]    = V[j][i]->GetMeanError();
             errSNR[j][i] = 1 / sqrt( SNR[j][i] );
         }
 
@@ -172,10 +173,12 @@ void Overlap_Distribution_Fit(){
     gStyle->SetStatY(0.925);
     for( int j = 0; j < num_det; ++j ){
         Canvas_Fit[j]->cd();
-        saveString = "line_" + to_string( j + 1 );
+        gPad->SetGrid();
+        saveString = EOS + "Detector " + to_string( j + 1 );
         saveName   = saveString.c_str();
         overlaps_[j] = new TGraphErrors( nBinDx, SNR_[j], mea_[j],
-                                              errSNR_[j], rms_[j] );
+                                              errSNR_[j], err_[j] );
+        overlaps_[j]->SetTitle( saveName );
         overlaps_[j]->GetXaxis()->SetTitle( "(Outputted SNR)^{-1}" );
         overlaps_[j]->GetXaxis()->CenterTitle();
         overlaps_[j]->GetYaxis()->SetTitle( "(averge overlap)^{-1}" );
@@ -185,8 +188,9 @@ void Overlap_Distribution_Fit(){
         overlaps_[j]->Draw("AP");
         line_[j]     = new TF1( saveName, "[0] * x + 1", 0 , 1000 );
         r_[j]        = overlaps_[j]->Fit( line_[j], "RS");
+        gStyle -> SetOptFit();
 
-        saveString = "report/" + saveString + ".pdf";
+        saveString = "report/FIT" + saveString + ".pdf";
         saveName   = saveString.c_str();
         Canvas_Fit[j]->Draw();
         Canvas_Fit[j]->Print((saveName));

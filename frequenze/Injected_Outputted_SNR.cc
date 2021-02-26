@@ -3,8 +3,8 @@
 
 TString path = "/home/aidin/Documenti/Tesi/analisi/frequenze/";
 TString head = "wave_O4I_GN_LHV_SIM_PMNS_";
-//std::string EOS  = "SHT2_0spin1";
-std::string EOS  = "APR4_q09";
+std::string EOS  = "SHT2_0spin1";
+//std::string EOS  = "APR4_q09";
 TString tail = "_cl.M1.root";
 const int num_det = 3;
 
@@ -100,13 +100,13 @@ void Injected_Outputted_SNR(){
         LegendoSNR[j]->SetNColumns(2);
     }
 
-    gStyle->SetOptStat(0); // tolgo le statistiche 
+    gStyle->SetOptStat(0); // tolgo le statistiche
     for( int j = 0; j < num_det; ++j ){
         Canvas[j]->Divide(1,2);
         Canvas[j]->cd(1);
         gPad->SetGrid();
 
-        for( int i = 0; i < 15; i+=3 ){
+        for( int i = 0; i < numDistances * num_det; i+=3 ){
             ViSNR[i]->Draw("SAME");
             ViSNR[i]->SetLineWidth(4);
         }
@@ -125,8 +125,8 @@ void Injected_Outputted_SNR(){
 
         const char* legNameiSNR;
         string lNameiSNR;
-        for( int i = 0; i < numDistances; ++i ){
-            lNameiSNR   = d[i] + " kPc";
+        for( int i = 0; i < numDistances * num_det; i+=3 ){
+            lNameiSNR   = d[i/3] + " kPc";
             legNameiSNR = lNameiSNR.c_str();
             LegendiSNR[j]->AddEntry( ViSNR[i], legNameiSNR, "l" );
         }
@@ -139,7 +139,7 @@ void Injected_Outputted_SNR(){
 
         Canvas[j]->cd(2);
         gPad->SetGrid();
-        for( int i = 0; i < 15; i+=3 ){
+        for( int i = 0; i < numDistances * num_det; i+=3 ){
             VoSNR[i]->Draw("SAME");
             VoSNR[i]->SetLineWidth(4);
         }
@@ -158,8 +158,8 @@ void Injected_Outputted_SNR(){
 
         const char* legNameoSNR;
         string lNameoSNR;
-        for( int i = 0; i < numDistances; ++i ){
-            lNameoSNR   = d[i] + " kPc";
+        for( int i = 0; i < numDistances * num_det; i+=3 ){
+            lNameoSNR   = d[i/3] + " kPc";
             legNameoSNR = lNameoSNR.c_str();
             LegendoSNR[j]->AddEntry( VoSNR[i], legNameoSNR, "l" );
         }

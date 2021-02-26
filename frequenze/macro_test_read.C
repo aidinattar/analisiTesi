@@ -9,7 +9,6 @@ TString filemerge = "wave_O4I_GN_LHV_SIM_PMNS_SHT2_0spin1_cl.M1.root";
 void macro_test_read(){
 
   TString merge_file_name = path + filemerge;
-  TString       path_save = path +    "report/dump";
 
   TFile*  filemerge = new TFile( merge_file_name.Data(), "update" );
   TTree* merge_tree =   ( TTree* )    filemerge->Get( "waveburst" );
