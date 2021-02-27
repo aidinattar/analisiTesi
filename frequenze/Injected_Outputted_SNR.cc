@@ -48,14 +48,15 @@ void Injected_Outputted_SNR(){
     merge_tree->SetBranchAddress(   "oSNR", &oSNR   );
     merge_tree->SetBranchAddress(   "iSNR", &iSNR   );
 
-    std::vector <TH1F*> VoSNR;
-    VoSNR.reserve( numDistances * num_det );
-    std::vector <TH1F*> ViSNR;
-    ViSNR.reserve( numDistances * num_det );
-    std::vector <TH1F*> VNETiSNR;
-    ViSNR.reserve( numDistances );
-    std::vector <TH1F*> VNEToSNR;
-    ViSNR.reserve( numDistances );
+    std::vector <TH1F*>                         VoSNR;
+    std::vector <TH1F*>                         ViSNR;
+    std::vector <TH1F*>                      VNETiSNR;
+    std::vector <TH1F*>                      VNEToSNR;
+
+    VoSNR.reserve(           numDistances * num_det );
+    ViSNR.reserve(           numDistances * num_det );
+    ViSNR.reserve(                     numDistances );
+    ViSNR.reserve(                     numDistances );
     // riempio il vettore con un istogramma per ogni distanza e per ogni detector
     for( int i = 0; i < numDistances; ++i ){
         for( int j = 0; j < num_det; ++j ){

@@ -59,12 +59,11 @@ void Frequency_Duration(){
                 for( int k = 0; k < num_det; ++k )
                     if( abs( time[k] - time[k+3] ) < 5 ){ // condizione di minimo tempo
                         n = 3*( j - 1 ) + k;
-//                            std::cout << n << std::endl;
+//                        std::cout << n << std::endl;
                         Vduration[n]->Fill( duration[k] );
                         Vfrequency[n]->Fill( frequency[k] );
                     }
     }
-    std::cout << "ok" << std::endl;
 
     std::vector <TCanvas*> Canvas;
     Canvas.reserve( num_det );
@@ -160,7 +159,7 @@ void Frequency_Duration(){
         Vduration[j]->GetYaxis()->CenterTitle();
 
         const char* legNameduration;
-        string lNameduration;
+        std::string lNameduration;
         for( int i = 0; i < numDistances * num_det; i+=3 ){
             lNameduration   = d[i/3] + " Mpc";
             legNameduration = lNameduration.c_str();

@@ -3,8 +3,8 @@
 
 TString path = "/home/aidin/Documenti/Tesi/analisi/frequenze/";
 TString head = "wave_O4I_GN_LHV_SIM_PMNS_";
-std::string EOS  = "SHT2_0spin1";
-//std::string EOS  = "APR4_q09";
+//std::string EOS  = "SHT2_0spin1";
+std::string EOS  = "APR4_q09";
 TString tail = "_cl.M1.root";
 const int num_det = 3;
 
@@ -95,7 +95,10 @@ void Overlap_Distribution(){
         Canvas[j]->Divide( 5, 3 );
         for( int i = 0; i < nBinDx; ++i ){
             Canvas[j]->cd(i+1);
-            V[j][i]->Draw("");
+            saveString = "Bin SNR " + to_string( (int)SNR[j][i] );
+            saveName   =                        saveString.c_str();
+            V[j][i]->SetTitle(saveName);
+            V[j][i]->Draw();
         }
         saveString = "report/OverlapDistributionsDetector" + std::to_string(j+1) + EOS + ".pdf";
         saveName   = saveString.c_str();
