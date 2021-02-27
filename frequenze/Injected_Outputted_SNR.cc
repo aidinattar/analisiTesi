@@ -18,7 +18,7 @@ void Injected_Outputted_SNR(){
     TTree* merge_tree =   ( TTree* )    filemerge->Get( "waveburst" );
 
     int numDistances = 5;
-    int nBinD = 100;
+    int nBinD = 50;
     float factor;
     float oSNR[num_det], iSNR[num_det];
     const char* hName;
@@ -27,7 +27,8 @@ void Injected_Outputted_SNR(){
     std::string d[5] = { "20", "10", "5", "2.5", "1.25" };
     int n;
     int entr = merge_tree->GetEntries();
-    int maxSNR = 400;
+    int maxSNR    = 400;
+    int maxSNRDet = 250;
 
     float **NEToSNR = new float*[numDistances];
     float **NETiSNR = new float*[numDistances];
@@ -60,10 +61,10 @@ void Injected_Outputted_SNR(){
         for( int j = 0; j < num_det; ++j ){
             histname = "oSNRdistance" + std::to_string(i+1) + "_detector" + std::to_string(j+1);
             hName = histname.c_str();
-            VoSNR.push_back(new TH1F( hName, hName, nBinD, 0, maxSNR ));
+            VoSNR.push_back(new TH1F( hName, hName, nBinD, 0, maxSNRDet ));
             histname = "iSNRdistance" + std::to_string(i+1) + "_detector" + std::to_string(j+1);
             hName = histname.c_str();
-            ViSNR.push_back(new TH1F( hName, hName, nBinD, 0, maxSNR ));
+            ViSNR.push_back(new TH1F( hName, hName, nBinD, 0, maxSNRDet ));
         }
         histname = "NEToSNRdistance" + std::to_string(i+1);
         hName = histname.c_str();
@@ -76,22 +77,21 @@ void Injected_Outputted_SNR(){
     // riempio gli istogrammi
     for( int i = 0; i < entr; ++i ){
         merge_tree->GetEntry( i );
-            for( int j = 1; j < numDistances+1; ++j )
-                if( factor == j ){
-                    for( int k = 0; k < num_det; ++k )
-                        if( abs( time[k] - time[k+3] ) < 5 ){ // condizione di minimo tempo
-                            n = 3*( j - 1 ) + k;
+        for( int j = 1; j < numDistances+1; ++j )
+            if( factor == j ){
+                for( int k = 0; k < num_det; ++k )
+                    if( abs( time[k] - time[k+3] ) < 5 ){ // condizione di minimo tempo
+                        n = 3*( j - 1 ) + k;
 //                            std::cout << n << std::endl;
-                            VoSNR[n]->Fill( sqrt(oSNR[k]) );
-                            ViSNR[n]->Fill( sqrt(iSNR[k]) );
-                            NEToSNR[j-1][i] += oSNR[k];
-                            NETiSNR[j-1][i] += iSNR[k];
-                        }
-                    VNETiSNR[j-1]->Fill( sqrt(NETiSNR[j-1][i]) );
-                    VNEToSNR[j-1]->Fill( sqrt(NEToSNR[j-1][i]) );
-                }
-        }
-    std::cout << "ok" << std::endl;
+                        VoSNR[n]->Fill( sqrt(oSNR[k]) );
+                        ViSNR[n]->Fill( sqrt(iSNR[k]) );
+                        NEToSNR[j-1][i] += oSNR[k];
+                        NETiSNR[j-1][i] += iSNR[k];
+                    }
+                VNETiSNR[j-1]->Fill( sqrt(NETiSNR[j-1][i]) );
+                VNEToSNR[j-1]->Fill( sqrt(NEToSNR[j-1][i]) );
+            }
+    }
 
     std::vector <TCanvas*> Canvas;
     Canvas.reserve( num_det );
